@@ -20,7 +20,7 @@ async function dbConnect(): Promise<void> { // async functions always return a p
       {} // can add additional info here
     );
 
-    connection.isConnected = db.connections[0].readyState; // db ke saath first connection ka current state . eg . 0 means not connected,1 is connected etc.
+    connection.isConnected = db.connections[0].readyState; // db ke saath first connection ka current state . eg . 0 means not connected,1 is connected etc.(its in api ->M mongoose docs)
 
     console.log("DB Connected Successfully");
 
