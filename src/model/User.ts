@@ -1,11 +1,11 @@
 // refer to mongoose with typescript docs
-import mongoose, { Schema, Document } from "mongoose"; // when an interface extends the type document , it gains functionalities like saving,converting to different types,etc
+import mongoose, { Schema, Document } from "mongoose"; 
 // schema is a class to create a new schema
 //Interface = TypeScript (compile-time, no runtime)
 //Schema = Mongoose (runtime, database behavior)
 
 //so actually u dont need the interface part.but if we ever need to change the schema , having an interface makes it easier for typescript correctness
-export interface Message extends Document {
+export interface Message extends Document { // document is like JPA repository which has fields like _id(id in object form where as id gives id in string form) and gives access to methods like save,add,etc.
   content: string;
   createdAt: Date;
 }
