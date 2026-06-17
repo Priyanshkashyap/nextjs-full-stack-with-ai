@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
     }
     return token;
   },
-    async session({ session,token }) {
+    async session({ session,token }) { // transferring token info to session taaki both session and token value can give us everything
       if (token) {
       session.user._id = token._id;
       session.user.isVerified = token.isVerified;

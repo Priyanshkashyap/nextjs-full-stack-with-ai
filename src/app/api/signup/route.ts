@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
   try {
     const { username, email, password } = await request.json();
-
+ console.log("read");
     // Check if verified username already exists
     const existingUserVerifiedByUsername = await UserModel.findOne({
       username,
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
         existingUserByEmail.verifyCodeExpiry = new Date(
           Date.now() + 3600000
         );
-
+        
         await existingUserByEmail.save();
       }
 
