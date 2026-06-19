@@ -11,25 +11,13 @@ export async function GET(request: Request) {
   await dbConnect();
 
   try {
-    const { searchParams } = new URL(request.url); //getting from all the query parameters
+    const { searchParams } = new URL(request.url);
 
     const queryParam = {
       username: searchParams.get("username"),
     };
 
-    // validate with zod
     const result = UsernameQuerySchema.safeParse(queryParam);
-
-    console.log(result); // TODO: remove
-/* result will have either success or error,  result.error.format() will give below part..format() is a Zod method that converts a complicated ZodError into a nested object structure that matches your schema.
-{
-  _errors: [],
-  username: {
-    _errors: [
-      "String must contain at least 3 character(s)"
-    ]
-  }
-}*/
 
     if (!result.success) {
       const usernameErrors =
@@ -48,6 +36,30 @@ export async function GET(request: Request) {
     }
 
     const { username } = result.data;
+
+    // Check if username already exists for a verified user
+    const existingVerifiedUser = await UserModel.findOne({
+      username,
+      isVerified: true,
+    });
+
+    if (existingVerifiedUser) {
+      return Response.json(
+        {
+          success: false,
+          message: "Username is already taken",
+        },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      {
+        success: true,
+        message: "Username is unique",
+      },
+      { status: 200 }
+    );
 
   } catch (error) {
     console.error("Error checking username", error);
