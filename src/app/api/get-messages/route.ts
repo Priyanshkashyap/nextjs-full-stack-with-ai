@@ -24,22 +24,22 @@ export async function GET(request: Request) {
   const userId = new mongoose.Types.ObjectId(user._id); // in aggregation pipelines approach u need userid to be exactly mongodb user object type
 
   try {
-    const user = await UserModel.aggregate([
+    const user = await UserModel.aggregate([ // Think of aggregation as a pipeline where MongoDB takes documents and passes them through a series of stages.
       {
-        $match: {
+        $match: { // It filters and keeps only the logged-in user's document.
           _id: userId,
         },
       },
       {
-        $unwind: "$messages",
+        $unwind: "$messages",// MongoDB takes every element inside the messages array and creates a separate document for it.Now MongoDB can work on each message individually.
       },
       {
         $sort: {
-          "messages.createdAt": -1,
+          "messages.createdAt": -1, //Sort all the documents in decreasing order produced by $unwind.here its date based
         },
       },
       {
-        $group: {
+        $group: { //Group all documents having the same user id. for any aggregate pipeline first destructing has to be done
           _id: "$_id",
           messages: {
             $push: "$messages",
