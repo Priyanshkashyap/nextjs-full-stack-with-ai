@@ -8,11 +8,12 @@ export async function POST(request: Request) {
     const { username, code } = await request.json();
 
     const decodedUsername = decodeURIComponent(username);// to make reading url query params easily
-
+    console.log("Received username:", username);
+console.log("Decoded username:", decodedUsername);
     const user = await UserModel.findOne({
       username: decodedUsername,
     });
-
+    console.log("User:", user);
     if (!user) {
       return Response.json(
         {

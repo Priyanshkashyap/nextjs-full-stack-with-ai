@@ -1,14 +1,4 @@
-import {
-  Html,
-  Head,
-  Font,
-  Preview,
-  Heading,
-  Row,
-  Section,
-  Text,
-  Button,
-} from "react-email"; // looks a bit dfferent from normal html tags but converted to those only underneath
+import {Html,Head,Font,Preview,Heading,Row,Section,Text,Button,} from "react-email"; // looks a bit dfferent from normal html tags but converted to those only underneath
 
 interface VerificationEmailProps {
   username: string;

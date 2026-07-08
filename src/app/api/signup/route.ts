@@ -83,14 +83,15 @@ export async function POST(request: Request) {
 
       await newUser.save();
     }
-
+    console.log("About to call sendVerificationEmail");
     // Send verification email
     const emailResponse = await sendVerificationEmail(
       email,
       username,
       verifyCode
     );
-
+    console.log("Returned from sendVerificationEmail");
+console.log(emailResponse);
     if (!emailResponse.success) {
       return Response.json(
         {

@@ -1,8 +1,8 @@
 import { streamText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
-
+// Almost every AI library in the world already knows how to talk to OpenAI.Instead of forcing everyone to write: different syntax, ollama says "Pretend I'm OpenAI. Send me requests in OpenAI's format."that is being open ai compatible
 const ollama = createOpenAI({
-  baseURL: "http://localhost:11434/v1",
+  baseURL: "http://localhost:11434/v1", // "Don't send requests to api.openai.com. Send them to my local Ollama server instead."
   apiKey: "ollama", // Dummy value. Ollama ignores it.
 });
 
