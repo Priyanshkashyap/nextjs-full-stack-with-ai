@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
 pages: { // next auth designs its own sigm up/sign in pages 
-    signIn: '/signin',
+    signIn: '/sign-in',
    },
   secret: process.env.NEXTAUTH_SECRET,
 };

@@ -1,3 +1,11 @@
+import axios from "axios";
+import { X } from "lucide-react";
+
+import { Message } from "@/src/model/User";
+import { ApiResponse } from "@/src/types/ApiResponse";
+
+import { toast } from "sonner";
+
 import {
   Card,
   CardContent,
@@ -21,47 +29,80 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-const MessageCard = () => {
+type MessageCardProps = {
+  message: Message;
+  onMessageDelete: (messageId: string) => void;
+};
+
+const MessageCard = ({
+  message,
+  onMessageDelete,
+}: MessageCardProps) => {
+
+  const handleDeleteConfirm = async () => {
+    const response = await axios.delete<ApiResponse>(
+      `/api/delete-message/${message._id}`
+    );
+
+    toast.success(response.data.message);
+
+    onMessageDelete(message._id.toString());
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
+
+        <CardTitle>
+          Card Title
+        </CardTitle>
 
         <AlertDialog>
+
           <AlertDialogTrigger asChild>
-            <Button variant="outline">
-              Show Dialog
+            <Button variant="destructive">
+              <X className="w-5 h-5" />
             </Button>
           </AlertDialogTrigger>
 
           <AlertDialogContent>
+
             <AlertDialogHeader>
+
               <AlertDialogTitle>
                 Are you absolutely sure?
               </AlertDialogTitle>
 
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently
-                delete your account and remove your data from our
-                servers.
+                This action cannot be undone. This will
+                permanently delete your account and remove
+                your data from our servers.
               </AlertDialogDescription>
+
             </AlertDialogHeader>
 
             <AlertDialogFooter>
+
               <AlertDialogCancel>
                 Cancel
               </AlertDialogCancel>
 
-              <AlertDialogAction>
+              <AlertDialogAction
+                onClick={handleDeleteConfirm}
+              >
                 Continue
               </AlertDialogAction>
+
             </AlertDialogFooter>
+
           </AlertDialogContent>
+
         </AlertDialog>
 
         <CardDescription>
           Card Description
         </CardDescription>
+
       </CardHeader>
 
       <CardContent>
@@ -71,6 +112,7 @@ const MessageCard = () => {
       <CardFooter>
         <p>Card Footer</p>
       </CardFooter>
+
     </Card>
   );
 };

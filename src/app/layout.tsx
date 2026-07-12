@@ -3,9 +3,12 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import AuthProvider from "@/src/context/AuthProvider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
-import Navbar from "@/components/ui/NavBar";
-import './globals.css'
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,21 +27,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        inter.variable,
+        "font-sans"
+      )}
     >
-      <AuthProvider>
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        {children}
-        <Toaster />
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
       </body>
-      </AuthProvider>
     </html>
   );
 }
