@@ -1,12 +1,27 @@
+import { sendMessageSchema } from "@/src/schemas/sendMessageSchema";
 import dbConnect from "@/src/lib/dbConnect";
-import UserModel,{ Message } from '../../../model/User';
+import UserModel from "@/src/model/User";
+import { Message } from "@/src/model/User";
 
 export async function POST(request: Request) {
   await dbConnect();
 
-  const { username, content } = await request.json();
-
   try {
+    const body = await request.json();
+    const result = sendMessageSchema.safeParse(body);
+
+    if (!result.success) {
+      return Response.json(
+        {
+          success: false,
+         message: result.error.issues[0]?.message || "Invalid request body",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { username, content } = result.data;
+
     const user = await UserModel.findOne({ username });
 
     if (!user) {
@@ -19,12 +34,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Is user accepting messages?
     if (!user.isAcceptingMessage) {
       return Response.json(
         {
           success: false,
-          message: "User is not accepting the messages",
+          message: "User is not accepting messages",
         },
         { status: 403 }
       );
@@ -35,19 +49,18 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     };
 
-    user.messages.push(newMessage as Message); // because message type hi hona chahiye
-
+    user.messages.push(newMessage as Message);
     await user.save();
 
     return Response.json(
       {
         success: true,
-        message: "message sent successfully",
+        message: "Message sent successfully",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error adding messages", error);
+    console.log("Error adding message", error);
 
     return Response.json(
       {

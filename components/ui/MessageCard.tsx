@@ -50,71 +50,65 @@ const MessageCard = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
+  <Card>
 
-        <CardTitle>
-          Card Title
+    <CardHeader className="flex flex-row justify-between items-start">
+
+      <div>
+        <CardTitle className="break-words">
+          {message.content}
         </CardTitle>
 
-        <AlertDialog>
-
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive">
-              <X className="w-5 h-5" />
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-
-            <AlertDialogHeader>
-
-              <AlertDialogTitle>
-                Are you absolutely sure?
-              </AlertDialogTitle>
-
-              <AlertDialogDescription>
-                This action cannot be undone. This will
-                permanently delete your account and remove
-                your data from our servers.
-              </AlertDialogDescription>
-
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-
-              <AlertDialogCancel>
-                Cancel
-              </AlertDialogCancel>
-
-              <AlertDialogAction
-                onClick={handleDeleteConfirm}
-              >
-                Continue
-              </AlertDialogAction>
-
-            </AlertDialogFooter>
-
-          </AlertDialogContent>
-
-        </AlertDialog>
-
         <CardDescription>
-          Card Description
+          {new Date(message.createdAt).toLocaleString()}
         </CardDescription>
+      </div>
 
-      </CardHeader>
+      <AlertDialog>
 
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
+        <AlertDialogTrigger asChild>
 
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
+          <Button variant="destructive" size="icon">
+            <X className="w-4 h-4" />
+          </Button>
 
-    </Card>
-  );
-};
+        </AlertDialogTrigger>
 
+        <AlertDialogContent>
+
+          <AlertDialogHeader>
+
+            <AlertDialogTitle>
+              Delete Message?
+            </AlertDialogTitle>
+
+            <AlertDialogDescription>
+              This action cannot be undone.
+            </AlertDialogDescription>
+
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+
+            <AlertDialogCancel>
+              Cancel
+            </AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+            >
+              Delete
+            </AlertDialogAction>
+
+          </AlertDialogFooter>
+
+        </AlertDialogContent>
+
+      </AlertDialog>
+
+    </CardHeader>
+
+  </Card>
+);
+}
 export default MessageCard;

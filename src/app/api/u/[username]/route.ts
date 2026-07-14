@@ -3,16 +3,18 @@ import UserModel from "@/src/model/User";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   await dbConnect();
 
   try {
-    const username = decodeURIComponent(params.username);
+    const { username } = await params;
 
-    const user = await UserModel.findOne({ username }).select(
-      "username isAcceptingMessage"
-    );
+    const decodedUsername = decodeURIComponent(username);
+
+    const user = await UserModel.findOne({
+      username: decodedUsername,
+    }).select("username isAcceptingMessage");
 
     if (!user) {
       return Response.json(
@@ -33,7 +35,7 @@ export async function GET(
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error fetching public user profile", error);
+    console.log("Error fetching public profile", error);
 
     return Response.json(
       {
