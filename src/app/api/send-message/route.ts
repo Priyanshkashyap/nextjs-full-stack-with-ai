@@ -1,7 +1,7 @@
 import { sendMessageSchema } from "@/src/schemas/sendMessageSchema";
 import dbConnect from "@/src/lib/dbConnect";
-import UserModel from "@/src/model/User";
-import { Message } from "@/src/model/User";
+import UserModel, { Message } from "@/src/model/User";
+import { moderateMessage } from "@/src/helpers/moderateMessage";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -14,7 +14,8 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-         message: result.error.issues[0]?.message || "Invalid request body",
+          message:
+            result.error.issues[0]?.message || "Invalid request body",
         },
         { status: 400 }
       );
@@ -41,6 +42,18 @@ export async function POST(request: Request) {
           message: "User is not accepting messages",
         },
         { status: 403 }
+      );
+    }
+
+    const isSafe = await moderateMessage(content);
+
+    if (!isSafe) {
+      return Response.json(
+        {
+          success: false,
+          message: "Message contains inappropriate content.",
+        },
+        { status: 400 }
       );
     }
 

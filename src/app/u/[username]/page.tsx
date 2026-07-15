@@ -136,34 +136,44 @@ export default function PublicMessagePage() {
   };
 
   const onSubmit = async (data: MessageFormValues) => {
-    if (!username) return;
+  if (!username) return;
 
-    if (!isAcceptingMessage) {
-      toast.error("This user is not accepting messages right now");
-      return;
-    }
+  if (!isAcceptingMessage) {
+    toast.error("This user is not accepting messages right now");
+    return;
+  }
 
-    setIsSending(true);
+  setIsSending(true);
 
-    try {
-      const response = await axios.post<ApiResponse>("/api/send-message", {
-        username,
-        content: data.content,
+  try {
+    const response = await axios.post<ApiResponse>("/api/send-message", {
+      username,
+      content: data.content,
+    });
+
+    toast.success(response.data.message || "Message sent successfully");
+
+    reset();
+    setSuggestions([]);
+  } catch (error) {
+    const axiosError = error as AxiosError<ApiResponse>;
+
+    const message =
+      axiosError.response?.data.message ??
+      "Failed to send message";
+
+    if (message.toLowerCase().includes("inappropriate")) {
+      toast.error("🚫 Message rejected", {
+        description:
+          "Your message contains inappropriate content. Please rewrite it and try again.",
       });
-
-      toast.success(response.data.message || "Message sent successfully");
-      reset();
-      setSuggestions([]);
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-
-      toast.error(
-        axiosError.response?.data.message ?? "Failed to send message"
-      );
-    } finally {
-      setIsSending(false);
+    } else {
+      toast.error(message);
     }
-  };
+  } finally {
+    setIsSending(false);
+  }
+};
 
   if (isLoadingProfile) {
     return (
@@ -250,34 +260,53 @@ export default function PublicMessagePage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleSuggestMessages}
-                disabled={!isAcceptingMessage || isSuggesting}
-                className="gap-2"
-              >
-                {isSuggesting ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-                Suggest Messages
-              </Button>
 
-              <Button
-                type="submit"
-                disabled={!isAcceptingMessage || isSending}
-                className="gap-2"
-              >
-                {isSending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
-                Send
-              </Button>
-            </div>
+  <Button
+    type="button"
+    variant="outline"
+    onClick={handleSuggestMessages}
+    disabled={
+      !isAcceptingMessage ||
+      isSuggesting ||
+      isSending
+    }
+    className="gap-2"
+  >
+    {isSuggesting ? (
+      <>
+        <Loader2 className="h-4 w-4 animate-spin" />
+        Generating...
+      </>
+    ) : (
+      <>
+        <Sparkles className="h-4 w-4" />
+        Suggest Messages
+      </>
+    )}
+  </Button>
+
+  <Button
+    type="submit"
+    disabled={
+      !isAcceptingMessage ||
+      isSending
+    }
+    className="gap-2"
+  >
+    {isSending ? (
+      <>
+        <Loader2 className="h-4 w-4 animate-spin" />
+        Checking...
+      </>
+    ) : (
+      <>
+        <Send className="h-4 w-4" />
+        Send
+      </>
+    )}
+  </Button>
+
+</div>
           </form>
         </div>
 
