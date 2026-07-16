@@ -5,8 +5,6 @@ import { getToken } from "next-auth/jwt";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request ,secret: process.env.NEXTAUTH_SECRET,});
-    console.log("PATH:", request.nextUrl.pathname);
-    console.log("TOKEN:", token); 
     const url = request.nextUrl;
    // If user is already logged in and tries to access auth pages
   if (

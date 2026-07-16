@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { ollama, OLLAMA_MODERATION_MODEL } from "@/src/lib/ollama";
+import { groq,GROQ_MODEL } from "../lib/groq";
 
 export async function moderateMessage(content: string): Promise<boolean> {
   const moderationPrompt = `
@@ -25,7 +25,7 @@ ${content}
 `;
 
   const result = await generateText({
-    model: ollama(OLLAMA_MODERATION_MODEL),
+    model: groq(GROQ_MODEL),
     system: moderationPrompt,
     prompt: "Classify the message.",
   });

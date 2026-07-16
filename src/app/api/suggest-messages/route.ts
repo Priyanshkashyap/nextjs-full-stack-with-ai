@@ -1,5 +1,5 @@
 import { streamText } from "ai";
-import { ollama, OLLAMA_SUGGEST_MODEL } from "@/src/lib/ollama";
+import { groq,GROQ_MODEL } from "@/src/lib/groq";
 
 export async function POST(req: Request) {
   try {
@@ -19,14 +19,14 @@ Only return the questions.
 `;
 
     const result = streamText({
-      model: ollama(OLLAMA_SUGGEST_MODEL),
+      model: groq(GROQ_MODEL),
       system: systemPrompt,
       messages,
     });
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Ollama Error:", error);
+    console.error("Groq Error:", error);
 
     return Response.json(
       {
